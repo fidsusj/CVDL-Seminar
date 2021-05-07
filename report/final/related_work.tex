@@ -6,12 +6,24 @@ Regarding the top-5 test error score VGG got beaten by GoogLeNet with 6.67 compa
 
 When trying to answer the question how deep CNNs can get the so-called degradation problem was discovered. During training it was experienced that the loss curve started to ascent again once a specific depth threshold was passed. This was because once an ideal mapping to the right output vector was learned up until a certain depth by shallow layers, it was difficult to train the remaining layers to keep these values by learning an implicit identity function through several non-linearity steps. ResNet solved the degradation problem by introducing so-called shortcut connections that forward intermediate network values to deeper layers. The skipped network layers therefore only needed to learn the residual towards the expected output values giving ResNet its name. Therefore in case the optimal output is already learned, the weights of a residual component will turn to zero and an identity function is realized. Training an ensemble of 152 layer-deep ResNets on ImageNet as part of the ILSVRC-2015 challenge resulted in a 3.57 top-5 test error score beating both VGG and Inception from the previous challenge while keeping complexity eight times lower  than VGG for a single net. \cite{KaimingHe.2015}
 
-DenseNet \cite{GaoHuang.2016}.
+The journey continues with DenseNet, a novel network architecture that feeds a layer all outputs from previous layers and passes its own feature maps towards all consecutive layers inside so-called dense blocks. It therefore makes feature propagation stronger by making feature reuse possible. Compared to ResNet, DenseNet achieves a lower error rate on CIFAR-10 with 4.51 to 6.61 at comparable depth while having less parameters to train. \cite{GaoHuang.2016}
 
-- multi-branch topology
+A groundbreaking achievement was published with EfficientNets, a series of network architectures that were uniformly scaled in depth, width and resolution using a compound scaling method with fixed scaling coefficients for different hardware memory limits. 
+
+\begin{figure}[t]
+	\begin{center}
+		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
+		\includegraphics[width=0.8\linewidth]{images/efficientnet.PNG}
+	\end{center}
+	\caption{Comparison of EfficientNet to other state-of-the-art architectures on ImageNet (top-1 accuracy) compared to the number of parameters used}
+	\label{fig:efficientnet}
+\end{figure}
+
+\autoref{fig:efficientnet} shows a 84.3\% top-1 accuracy score of EfficientNet-B7 on ImageNet outperforming other networks like ResNet or DenseNet while at the same time having far fewer parameters to train. \cite{LeMingxingTan.2019}
+
+RegNet \cite{IlijaRadosavovic.2020}
+
+-----------
+
 - structural re-parameterization technique
-- EfficientNet
-- RegNet
-
 - automatic, or manual architecture search
-- search compound scaling strategy
