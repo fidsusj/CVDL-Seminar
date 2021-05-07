@@ -21,7 +21,9 @@ A groundbreaking achievement was published with EfficientNets, a series of netwo
 
 \autoref{fig:efficientnet} shows a 84.3\% top-1 accuracy score of EfficientNet-B7 on ImageNet outperforming other networks like ResNet or DenseNet while at the same time having far fewer parameters to train. \cite{LeMingxingTan.2019}
 
-RegNet \cite{IlijaRadosavovic.2020}
+All these recent achievements on CNNs were based on manual architecture search. As opposed to such manual search, neural architecture search (NAS) tries to automate the process of finding suitable network architectures by iterating over a design space in a GridSearch-like manner. \cite{BarretZoph.2017}
+
+One layer of abstraction higher, one can also search for suitable design spaces in order to derive a common understanding about important design principles. RegNet is such a design space derived from AnyNet, the largest possible design space without further constraints, by iteratively parametrizing whole populations of diverse networks and searching for the simplest but most perfomant population. Using this technique one can iteratively eliminate design space dimensions that are actually not too important for the network design because of similar perfomances. For instance, using a bootleneck compression ratio does not influence model performance and could thus be excluded from the design space by making it a static constraint. Increasing the depth or width of networks on the other hand is one of the key design space dimensions. The resulting population of RegNet was able to outperform EfficientNet. \cite{IlijaRadosavovic.2020}
 
 -----------
 
