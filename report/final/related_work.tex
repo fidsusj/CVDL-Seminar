@@ -49,3 +49,17 @@ The next evolutionary step of ShuffleNet was made compliant to several design pr
 	\item network fragmentation reduces degree of parallelism and
 	\item element-wise operations are non-negligible
 \end{itemize}
+
+After these evolutionary steps of CNNs, the question arises whether it really needs such huge and complicated architectures to train a decent model or whether simple models can achieve comparable results. 
+
+\cite{LechaoXiao.2018} gives a proof that plain CNNs with huge depths (10k layers) can be trained to give reasonable results (99\% test accuracy on MNIST and 82\% on CIFAR-10). Therefore a theoretical framework built upon mean field theory guided the design of an initialization scheme (delta-orthogonal initialization) that enables signals to smoothly flow through the entire network without being slowly reduced. 
+
+\cite{OyebadeOyedotun.2020} is another paper giving proof of well performing deep plain CNNs. It uses LReLU to tackle the units' activations saturation/explosion and max-norm constraint on the weights to prevent exploding gradients. Also a strategic parameter initialization scheme is introduced. Using this approach plain CNNs of up to 100 layers can be trained sufficiently well. On ImageNet the best performing plain CNN was 30 layers deep giving a top-1 error of 24.1\% and a top-5 error of 7.3\%, slightly better than VGG-19 with comparable parameter size. 
+
+- Diracnet
+- Asym Conv Block
+- DO-Conv
+- ExpandNet
+
+- Winograd
+
