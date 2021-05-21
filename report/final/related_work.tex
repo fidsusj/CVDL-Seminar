@@ -56,10 +56,27 @@ After these evolutionary steps of CNNs, the question arises whether it really ne
 
 \cite{OyebadeOyedotun.2020} is another paper giving proof of well performing deep plain CNNs. It uses LReLU to tackle the units' activations saturation/explosion and max-norm constraint on the weights to prevent exploding gradients. Also a strategic parameter initialization scheme is introduced. Using this approach plain CNNs of up to 100 layers can be trained sufficiently well. On ImageNet the best performing plain CNN was 30 layers deep giving a top-1 error of 24.1\% and a top-5 error of 7.3\%, slightly better than VGG-19 with comparable parameter size. 
 
-- Diracnet
-- Asym Conv Block
+\cite{SergeyZagoruyko.2018} with its novel Dirac weight parameterization given by the equation 
+
+\begin{equation}
+	\hat{W} = diag(a)I + diag(b)W_{norm}
+\end{equation}
+
+with $a$ and $b$ being scaling vectors learned during training and $W_{norm}$ being a normalized weight vector, introduces a way to achieve deep network performances close to residual networks without actual skip-connections. Having a closer look one recognizes that the Dirac weight parameterization and residual networks approximately only differ in the order of non-linearities:
+
+\begin{equation}
+	y = \sigma((diag(a)I + diag(b)W_{norm}) X) \approx \sigma(X + W'X)
+\end{equation}
+
+\begin{equation}
+	y = X + \sigma(WX)
+\end{equation}
+
+During the experiments, DiracNet was able to outperform other plain networks that did not manage to converge anymore after a 100-layer depth. Also DiracNet was able to closely match 1001-layer ResNet with only 28 layers on CIFAR-10 as well as ResNet-18 and ResNet-34 on ImageNet wile having the same amount of parameters (27.79\% vs. 27.17\% top-1 error with 34-layer depth configuration). 
+
+Another structural re-parameterization technique is given by the asymmetric convolutional block (ACB) from \cite{XiaohanDing.2019}. During training time a normal squared 3x3 convolutional kernel is replaced by multi-branch 3x3, 3x1 and 1x3 kernels that are added back together after batch-normalization. ACBs are architecture-neutral meaning can can replace normal 3x3 conv layers without having additional hyperparameters to tune, without further assumptions to take about the model and without additional computational complexity induced. For inference time these asymmetric kernels are added on top of each other forming again conventional 3x3 convolutional kernels initialized with the converted learned parameters. This re-parameterization technique strengthens the skeletons of squared convolutional kernels (that are naturally of higher magnitude), but in practice only leads to few but consistent performance improvements.  
+
 - DO-Conv
 - ExpandNet
 
 - Winograd
-
