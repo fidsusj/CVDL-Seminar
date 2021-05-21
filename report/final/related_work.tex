@@ -76,7 +76,24 @@ During the experiments, DiracNet was able to outperform other plain networks tha
 
 Another structural re-parameterization technique is given by the asymmetric convolutional block (ACB) from \cite{XiaohanDing.2019}. During training time a normal squared 3x3 convolutional kernel is replaced by multi-branch 3x3, 3x1 and 1x3 kernels that are added back together after batch-normalization. ACBs are architecture-neutral meaning can can replace normal 3x3 conv layers without having additional hyperparameters to tune, without further assumptions to take about the model and without additional computational complexity induced. For inference time these asymmetric kernels are added on top of each other forming again conventional 3x3 convolutional kernels initialized with the converted learned parameters. This re-parameterization technique strengthens the skeletons of squared convolutional kernels (that are naturally of higher magnitude), but in practice only leads to few but consistent performance improvements.  
 
-- DO-Conv
-- ExpandNet
+Further re-parameterization techniques are DO-Conv (depthwise over-parameterized) layers \cite{JinmingCao.2020} and additional consecutive linear layers without further non-linearity in between by ExpandNet \cite{ShuxuanGuo.2021}. Note that both architectures just like ACBs can also be folded back into the same structure as the original for the inference time. 
 
-- Winograd
+Now after reducing the complexity of a network by studies of plain convolutional nets and re-parameterization techniques, one can also optimize the running time of convolutional nets by optimizing the actual computation technique. Winograd convolution offers such a fast algorithms to calculate small 3x3 convolutions with stride one on small batch sizes. Imagine a one-dimensional example of a filter size of 3 and output size 2:
+
+\begin{figure}[ht]
+	\begin{center}
+		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
+		\includegraphics[width=0.8\linewidth]{images/winograd1.PNG}
+	\end{center}
+	\label{fig:winograd1}
+\end{figure}
+
+\begin{figure}[ht]
+	\begin{center}
+		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
+		\includegraphics[width=0.8\linewidth]{images/winograd2.PNG}
+	\end{center}
+	\label{fig:winograd2}
+\end{figure}
+
+Using this method the 6 MULs from original convolution can be reduced to just 4 MULs. Generalizing this to two-dimensional kernels and inputs in the spacial dimension, channels and multiple filters, the arithmetic complexity can still be reduced up to a factor of 4 compared to direct convolution. This optimization is based on reducing the amount of duplication when applying kernels using a sliding window approach. It reduces the amount of computation by reducing duplication and is therefore also much more cache-efficient. \cite{AndrewLavin.2015}
