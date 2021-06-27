@@ -32,6 +32,28 @@ Also it is worth noticing that RepVGG models can of course - at the costs of the
 
 The fact that RepVGG as the first of its kind achieved an accuracy of over 80\% on ImageNet is also not to forget (see \autoref{fig:results2}).
 
-
-
 \subsection{Ablation studies}
+
+\begin{figure}[t]
+	\begin{center}
+		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
+		\includegraphics[width=0.8\linewidth]{images/ablation1.PNG}
+	\end{center}
+	\caption{Ablation studies with 120 epochs on RepVGG-B0}
+	\label{fig:ablation1}
+\end{figure}
+
+In the ablation studies in \autoref{fig:ablation1} one recognizes the importance of the skip-connections and ensemble character of RepVGG after 120 epochs of training as the performance decreases when removing the identity and/or 1x1 convolutional branches. At the same time the speed increases when switching from a multi-branch model to a single-branch model. Note that the speed is this time measured before the structural re-parameterization. 
+
+\begin{figure}[t]
+	\begin{center}
+		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
+		\includegraphics[width=0.8\linewidth]{images/ablation2.PNG}
+	\end{center}
+	\caption{Performance comparisons with architectural variants of RepVGG-B0}
+	\label{fig:ablation2}
+\end{figure}
+
+The experiments shown in \autoref{fig:ablation2} are based on architectural changes of RepVGG-B0 after being trained for 120 epochs. With experiments using a DiracNet-like re-parameterization, a trivial re-parameterization (DiracNet re-parameterization with both scaling factors $a$ and $b$ set constant to one) and another structural re-parameterization method with asymmetric convolutional blocks, interesting experiments and comparisons to other methods of re-parameterization are given. One can therefore conclude, that re-parameterization with parameters only simulating a ResNet-like architecture during training like DiracNet does is inferior to a real structural re-parameterization method like RepVGG uses. Also the success of RepVGG cannot be traced back to simple over-parameterization of each block during training when comparing the accuracy of an initial RepVGG-B0 model to a similar model with plugged-in ACB blocks replacing the RepVGG blocks. Both models therefore use over-parameterization during training and afterwards structural re-parameterization to build the inferecne model, still the RepVGG model yields in higher accuracy. RepVGG is specifically designed to make plain VGG-like CNNs trainable and achieves its higher accuracy compared to a ACB-enriched architecture through its ResNet-like training-time architecture. 
+
+For the last comparison made in the experiments, a real residual network having one 3x3 convolutional layer in the first stage and two, three and eight residual blocks in stage two, three and four was build (skip-connections just like ResNet-18/34). While having the same amount of 3x3 conv layers RepVGG still managed to outperform such an architecture (75.14 vs. 74.56), which is not surprising looking back at the first experiments made and keeping in mind that RepVGG can be seen as an ensemble of far more models. 
