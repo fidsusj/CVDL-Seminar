@@ -1,5 +1,11 @@
 \section{Conclusion}
 
+Back to the question of \textit{RepVGG: Making VGG-style ConvNets great again?} one concludes that RepVGG convinces by providing a simple to implement VGG-style model with a well-achieved speed-accuracy trade-off by utilizing a structural re-parameterization method. It therefore clearly differenciates in its approach and goal-setting from other approaches like DiracNet, ABCs or special initialization methods. 
+
+RepVGG also gives a novel point of view into the design, training and deployment of CNNs with its re-parameterization method as a bridge to enable a separation into a training- and an inference-time architecture. Also considering the concrete deployment infrastructure and adapting the design of the model accordingly (3x3 convolutional layers to be optimized with the Winograd convolutional algorithm) is not to be neglected as a scientific contribution. 
+
+What remains is a plain VGG-like CNN model with noticable speed gains and the first of its kind achieving an over 80\% acuracy mark on ImageNet as a plain CNN model. Therefore RepVGG makes very important contribution into this specific field of research. The thesis to make VGG-style ConvNets great again fits to the results achieved in the original paper. 
+
 % TODO: Read through paper and check if nothing was forgotten (especially approach)
 % TODO: Compare with presentation
 % TODO: paper verlinken, z.B. nach jedem VGG und ResNet
@@ -8,13 +14,4 @@
 % TODO: Alle Bilder, alles und jeden zitieren (auch das RepVGG paper)
 % TODO: Cite ImageNet
 % TODO: Scale images correctly
-
-
-Clearly differentiate from DiracNet ACB, other methods
-
-Own thoughts: 
-In terms of introducing a simple to implement model with a good accuracy-speed tradeoff very well done
-Gives another point of view into image classification networks (hardware support, re-parameterization techniques, training-time/inference-time separation)
-As it is clearly positioned and did not have the intention to provide another state-of-the-art, it is a very important contribution into this specific field of research
-„Great again“: In the end it convinces with its speed gain instead of its accuarcy gain!
-
+% TODO: appreviations, when introduced?
