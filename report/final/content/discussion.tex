@@ -1,8 +1,20 @@
 \section{Discussion}
 
 \subsection{Highlights}
-- speed
-- application in practice (semantic segmentation)
+
+RepVGG aims to deliver an approach to implicitly train a simple plain VGG-like architecture by using a ResNet-like training-time architecture and transforming its weight parameters to the actual VGG-like architecture used for inference by utilizing a nocal structural re-parameterization method. Thus making such a transformation possible, RepVGG achieves an unquestionable boost in speed compared to modern state-of-the-art architectures while at the same time not falling too far apart in its achieved accuracy. The speed-accuracy trade-off was therefore well achieved. 
+
+Also pointing out other dimensions to take into consideration while designing CNN archiectures like supported hardware optimization (Winograd concolution) or MACs, which make the often used FLOP measure as a direct measure of speed redundant, also add value to this scientific outcome by experimental proof.
+
+Applying RepVGG to semantic segmentation on Cityscapes also demonstrates its value for industrial usage. Especially in real-time environments like autonomous driving having an optimal speed-accuracy trade-off is essential for the adoption of such networks. 
 
 \subsection{Weaknesses}
 % No global correlations because most layers in stage 4? (low res)
+
+One central weakness of the RepVGG models are the amount of parameters needed to achieve a decent accuracy. Using a plain CNN architectural design makes the amount of trainable parameters needed unavoidably much higher than compared to modern state-of-the-art architectures like EfficientNet in the end.  
+
+RepVGG is not the only family of CNN models that try to optimize the speed-accuracy trade-off. Especially ShuffleNet v2 once raised the claim to be the state-of-the-art regarding speed-accuracy trade-off. RepVGG was influenced by the scientific contributions of ShuffleNet regarding the additional factors that make FLOPs not applicable as a direct measure for speed. Unfortunately, no direct comparisons to ShuffleNet v2 or likewise MobileNets are given. ShuffleNets do not use simple plain CNN architectures containing only 3x3 convolution and ReLU, but still achieved decent speed-accuracy trade-offs in the past. Therefore having ShuffleNet v2 as an additional model in the experiments would have added additional insights as being a model to optimize speed-accuracy trade-off by not using a plain CNN approach like RepVGG does. Initial comparisons on ImageNet by comparing the experiments section of both papers seem to convey the impression that RepVGG could indeed outperform ShuffleNet v2 (e.g. comparing the equally sized ShuffleNet v2 0.5x with RepVGG-B1g2). Still RepVGG claims to prefer ShuffleNets over RepVGG models for low-power devices. 
+
+One could additionally raise the fact that RepVGG uses a lot of ResNet baselines for comparisons in its experimental section. As also using a ResNet-inspired training-time architecture such comparisons are necessary and valid, but might add a bias in baselines dominantely to ResNets. RepVGG does not raise the claim to outperform current state-of-the-arts, but rather aims to provide a simple to implement plain VGG-like inference-architecture with a good accuracy speed trade-off. Therefore the choice of EfficientNet designed for parameter-efficiency with its compound scaling strategy and RegnetX created through multi-level neural architecture search besides the ResNe(X)ts might not be the best choice for this field of application. For a better positioning such models surely help, but adding models in the same field of application (such as ShuffleNets) would add additional value.
+
+Last but not least, the promised flexibility gain in using a plain VGG-like inference architecture is also not entirely given. RepVGG also introduces some constraints to perform the re-parameterization method correctly like equal striding and different padding configurations for the different training-time branches. Nevertheless, these are only minor constraints. 
