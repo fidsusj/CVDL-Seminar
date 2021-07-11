@@ -1,4 +1,4 @@
-\section{Related Work}
+\section{Related Work} \label{related_work}
 
 The VGG architecture was introduced in \cite{KarenSimonyan.2014}. One of its key finings was to prefer deep CNNs (16-19 weight layers) with small receptive fields induced by using small kernels over shallow CNNs with bigger receptive fields. Therefore a configuration of 3x3 kernels with stride 1 were used. This not only helps to strengthen the discriminative character of the network as the non-linear activation function (ReLU) is applied more often but also keeps the number of parameters to train lower. To increase the non-linearity without affecting the related receptive fields even 1x1 kernels were considered in more deeper architectures. Only by using simple convolutional, max-pooling and fully connected layers at the end of the network, VGG achieved a 24.4 top-1 validation error score during ILSVRC-2014 (single net performance). \cite{KarenSimonyan.2014}
 
@@ -31,7 +31,7 @@ In \cite{BarretZoph.2018} this NAS is first performed on the small CIFAR-10 data
 
 This method was lateron outperformed by \cite{ChenxiLiu.2018} which uses a heuristic search to find suitable convolutional cells and a surrogate function to predict its performance to limit the amount of convolutional cells to train. It is five times more efficient regarding the number of models evaluated and eight times faster regarding the total computational effort than \cite{BarretZoph.2018}. 
 
-Besides reinforcement learning methods there is also an evolutionary algorithms approach to neural architecture search with comparable results in model accuracy \cite{EstebanReal.2019}.
+Besides reinforcement learning methods there is also an evolutionary algorithms approach to NAS with comparable results in model accuracy \cite{EstebanReal.2019}.
 
 One layer of abstraction higher, one can also search for suitable design spaces in order to derive a common understanding about important design principles. RegNet is such a design space derived from AnyNet, the largest possible design space without further constraints, by iteratively parametrizing whole populations of diverse networks and searching for the simplest but most perfomant population. Using this technique one can iteratively eliminate design space dimensions that are actually not too important for the network design because of similar perfomances. For instance, using a bootleneck compression ratio does not influence model performance and could thus be excluded from the design space by making it a static constraint. Increasing the depth or width of networks on the other hand is one of the key design space dimensions. The resulting population of RegNet was able to outperform EfficientNet. \cite{IlijaRadosavovic.2020}
 
@@ -41,10 +41,10 @@ MobileNet takes use of such depthwise separable convolutional layers in their na
 
 ShuffleNet designed for mobile devices also builds upon depthwise separable convolutional layers and combines it with pointwise group convolution to gain additional speed through reducing computational expenses in a novel way. Possible information bottlenecks by the pointwise group convolution are tackled by using subsequent channel shuffeling to keep the information flow entropy of channels the same. ShuffleNet outperforms MobileNet by having a 7.8\% lower ImageNet top-1 error at level of 40 MFLOPs, but also having 32 layers more than the original MobileNet. Nevertheless succeeding experiments reduced depth still showed a superior behavior. \cite{XiangyuZhang.2017}
 
-The next evolutionary step of ShuffleNet was made compliant to several design principles derived to optimize general model behavior. Oftentimes the indirect metric of FLOPS as a measure for computational complexity is taken to derive speed quality guarantees of a network. Nevertheless, the direct metric speed is influenced by far more parameters than just FLOPS like memory access costs (MAC), the degree of parallelism and the optimized runtime of the target platform making FLOPS as a solely metric insufficient. FLOPS are take account for convolutional operations, but I/O operations, data shuffling or element-wise operations also are not be be neglected. The authors derive four design principles by which the original ShuffleNet architecture was revised beating its predecessor and MobileNet v2: \cite{NingningMa.2018}
+The next evolutionary step of ShuffleNet was made compliant to several design principles derived to optimize general model behavior. Oftentimes the indirect metric of FLOPS as a measure for computational complexity is taken to derive speed quality guarantees of a network. Nevertheless, the direct metric speed is influenced by far more parameters than just FLOPS like MACs, the degree of parallelism and the optimized runtime of the target platform making FLOPS as a solely metric insufficient. FLOPS are take account for convolutional operations, but I/O operations, data shuffling or element-wise operations also are not be be neglected. The authors derive four design principles by which the original ShuffleNet architecture was revised beating its predecessor and MobileNet v2: \cite{NingningMa.2018}
 
 \begin{itemize}
-	\item equal channel width minimizes memory access cost, 
+	\item equal channel width minimizes MAC, 
 	\item excessive group convolution increases MAC, 
 	\item network fragmentation reduces degree of parallelism and
 	\item element-wise operations are non-negligible
@@ -52,7 +52,7 @@ The next evolutionary step of ShuffleNet was made compliant to several design pr
 
 After these evolutionary steps of CNNs, the question arises whether it really needs such huge and complicated architectures to train a decent model or whether simple models can achieve comparable results. 
 
-\cite{LechaoXiao.2018} gives a proof that plain CNNs with huge depths (10k layers) can be trained to give reasonable results (99\% test accuracy on MNIST and 82\% on CIFAR-10). Therefore a theoretical framework built upon mean field theory guided the design of an initialization scheme (delta-orthogonal initialization) that enables signals to smoothly flow through the entire network without being slowly reduced. 
+\cite{Xiao.2018} gives a proof that plain CNNs with huge depths (10k layers) can be trained to give reasonable results (99\% test accuracy on MNIST and 82\% on CIFAR-10). Therefore a theoretical framework built upon mean field theory guided the design of an initialization scheme (delta-orthogonal initialization) that enables signals to smoothly flow through the entire network without being slowly reduced. 
 
 \cite{OyebadeOyedotun.2020} is another paper giving proof of well performing deep plain CNNs. It uses LReLU to tackle the units' activations saturation/explosion and max-norm constraint on the weights to prevent exploding gradients. Also a strategic parameter initialization scheme is introduced. Using this approach plain CNNs of up to 100 layers can be trained sufficiently well. On ImageNet the best performing plain CNN was 30 layers deep giving a top-1 error of 24.1\% and a top-5 error of 7.3\%, slightly better than VGG-19 with comparable parameter size. 
 
@@ -62,7 +62,7 @@ After these evolutionary steps of CNNs, the question arises whether it really ne
 	\hat{W} = diag(a)I + diag(b)W_{norm}
 \end{equation}
 
-with $a$ and $b$ being scaling vectors learned during training and $W_{norm}$ being a normalized weight vector, introduces a way to achieve deep network performances close to residual networks without actual skip-connections. Having a closer look one recognizes that the Dirac weight parameterization and residual networks approximately only differ in the order of non-linearities:
+with $a$ and $b$ being scaling vectors learned during training and $W_{norm}$ being a normalized weight vector, introduces a way to achieve deep network performances close to residual networks without actual shortcut connections. Having a closer look one recognizes that the Dirac weight parameterization and residual networks approximately only differ in the order of non-linearities:
 
 \begin{equation}
 	y = \sigma((diag(a)I + diag(b)W_{norm}) X) \approx \sigma(X + W'X)
@@ -74,7 +74,7 @@ with $a$ and $b$ being scaling vectors learned during training and $W_{norm}$ be
 
 During the experiments, DiracNet was able to outperform other plain networks that did not manage to converge anymore after a 100-layer depth. Also DiracNet was able to closely match 1001-layer ResNet with only 28 layers on CIFAR-10 as well as ResNet-18 and ResNet-34 on ImageNet wile having the same amount of parameters (27.79\% vs. 27.17\% top-1 error with 34-layer depth configuration). 
 
-Another structural re-parameterization technique is given by the asymmetric convolutional block (ACB) from \cite{XiaohanDing.2019}. During training time a normal squared 3x3 convolutional kernel is replaced by multi-branch 3x3, 3x1 and 1x3 kernels that are added back together after batch-normalization. ACBs are architecture-neutral meaning can can replace normal 3x3 conv layers without having additional hyperparameters to tune, without further assumptions to take about the model and without additional computational complexity induced. For inference time these asymmetric kernels are added on top of each other forming again conventional 3x3 convolutional kernels initialized with the converted learned parameters. This re-parameterization technique strengthens the skeletons of squared convolutional kernels (that are naturally of higher magnitude), but in practice only leads to few but consistent performance improvements.  
+Another structural re-parameterization technique is given by the asymmetric convolutional block (ACB) from \cite{XiaohanDing.2019}. During training time a normal squared 3x3 convolutional kernel is replaced by multi-branch 3x3, 3x1 and 1x3 kernels that are added back together after batch-normalization. ACBs are architecture-neutral meaning can can replace normal 3x3 convolutional layers without having additional hyperparameters to tune, without further assumptions to take about the model and without additional computational complexity induced. For inference time these asymmetric kernels are added on top of each other forming again conventional 3x3 convolutional kernels initialized with the converted learned parameters. This re-parameterization technique strengthens the skeletons of squared convolutional kernels (that are naturally of higher magnitude), but in practice only leads to few but consistent performance improvements.  
 
 Further re-parameterization techniques are DO-Conv (depthwise over-parameterized) layers \cite{JinmingCao.2020} and additional consecutive linear layers without further non-linearity in between by ExpandNet \cite{ShuxuanGuo.2021}. Note that both architectures just like ACBs can also be folded back into the same structure as the original for the inference time. 
 
