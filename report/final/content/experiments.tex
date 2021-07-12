@@ -44,7 +44,7 @@
 	\label{tab:hyperparameter}
 \end{table}
 
-Derived from the general purpose RepVGG archetype a set of different RepVGG models was provided (see \autoref{tab:models}) and trained (see \autoref{tab:models}) to be used in experiments. The lightweight models (RepVGG-A0 - RepVGG-A2) and middleweight models (RepVGG-B0 - RepVGG-B2) were only trained on a simple data augmentation setup \cite{PyTorch.2020} with random cropping and left-right flipping, whereas the heavyweight models additionally use Autoaugment \cite{EkinDCubuk.2019}, a method to search for suitable data augmentation policies proven to work well on ImageNet \cite{JiaDeng.2009}, and mixup \cite{HongyiZhang.2018}, that provides linear interpolated training samples of 2 parent samples. Also label smoothing \cite{ChristianSzegedy.2015} was incorporated as an additional regularization technique. Models with interleaved groupwise convolution are trained on both training setups. Note that through the structural re-parameterization strategy weight initialization was not explicitly considered anymore as now, while training a ResNet-like training-time architecture compared to training deep plain CNN models \cite{LechaoXiao.2018, OyebadeOyedotun.2020}, convergence is not too sensitive to the inital choice of weights anymore.
+Derived from the general-purpose RepVGG archetype a set of different RepVGG models was provided (see \autoref{tab:models}) and trained (see \autoref{tab:models}) to be used in experiments. The lightweight models (RepVGG-A0 - RepVGG-A2) and middleweight models (RepVGG-B0 - RepVGG-B2) were only trained on a simple data augmentation setup \cite{PyTorch.2020} with random cropping and left-right flipping, whereas the heavyweight models additionally use AutoAugment \cite{EkinDCubuk.2019}, a method to search for suitable data augmentation policies proven to work well on ImageNet \cite{JiaDeng.2009}, and mixup \cite{HongyiZhang.2018}, that provides linear interpolated training samples of 2 parent samples. Also, label smoothing \cite{ChristianSzegedy.2015} was incorporated as an additional regularization technique. Models with interleaved groupwise convolution are trained on both training setups. Note that through the structural re-parameterization strategy weight initialization was not explicitly considered anymore as now, while training a ResNet-like training-time architecture compared to training deep plain CNN models \cite{LechaoXiao.2018, OyebadeOyedotun.2020}, convergence is not too sensitive to the initial choice of weights anymore.
 
 \subsection{Comparison to baselines}
 
@@ -90,11 +90,11 @@ Derived from the general purpose RepVGG archetype a set of different RepVGG mode
 
 When analyzing the empirical results (see \autoref{tab:results1}) one recognizes the following achievements. 
 
-First the light- and middleweight models of RepVGG-A slightly outperform their ResNet baselines in accuracy, but achieve far higher inference speed. For instance RepVGG-A2 having a comparable amount of parameters to ResNet-50 is only 0.17\% better in accuracy, but therefor 83\% faster. Using interleaved groupwise convolutional layers such increases in speed can further be pushed, e.g. when looking at RepVGG-B1g2 and its counterpart baseline ResNet-152. Achieving the same accuracy RepVGG-B1g2 is a whole 2.66 times faster. 
+First the light- and middleweight models of RepVGG-A slightly outperform their ResNet \cite{KaimingHe.2015} baselines in accuracy, but achieve far higher inference speed. For instance, RepVGG-A2 having a comparable amount of parameters to ResNet-50 is only 0.17\% better in accuracy, but therefore 83\% faster. Using interleaved groupwise convolutional layers such increases in speed can further be pushed, e.g. when looking at RepVGG-B1g2 and its counterpart baseline ResNet-152. Achieving the same accuracy RepVGG-B1g2 is a whole 2.66 times faster. 
 
-When looking at the parameter efficiency RepVGG manages to outperfom the historical ResNet and VGG competitors. While achieving the same accuracy RepVGG-B1g2 only needs 69\% of the parameters of ResNet-152. The difference is even higher when comparing RepVGG-A0 to VGG-16 which state a reduction around 94\% of the parameters needed (8.30M compared to 138.35M). Obviously such parameter efficiency gains change when comparing RepVGG to more modern architectures like EfficientNet (14.33M RevVGG-B0 vs. 5.26M EfficientNet-B0) or RegNet (15.26M RegNetX-32.GF vs 41.36M RepVGG-B1g2). As the goal of RepVGG is to gain a good speed-accuracy trade-off while using a plain architecture for inference, such parameter inefficiency are justifiable and difficult to avoid. 
+When looking at the parameter efficiency RepVGG manages to outperform the historical ResNet \cite{KaimingHe.2015} and VGG \cite{KarenSimonyan.2014} competitors. While achieving the same accuracy RepVGG-B1g2 only needs 69\% of the parameters of ResNet-152. The difference is even higher when comparing RepVGG-A0 to VGG-16 which state a reduction of around 94\% of the parameters needed (8.30M compared to 138.35M). Obviously such parameter efficiency gains change when comparing RepVGG to more modern architectures like EfficientNet \cite{LeMingxingTan.2019} (14.33M RevVGG-B0 vs. 5.26M EfficientNet-B0) or RegNet \cite{IlijaRadosavovic.2020} (15.26M RegNetX-3.2GF vs 41.36M RepVGG-B1g2). As the goal of RepVGG is to gain a good speed-accuracy trade-off while using a plain architecture for inference, such parameter inefficiency is justifiable and difficult to avoid. 
 
-Also it is worth noticing that RepVGG models can of course - at the costs of the amount of parameters needed - keep up with state-of-the-art models. The authors therefore try to make a point by comparing e.g. EfficientNet-B0 to RepVGG-A2 being 1.37\% more accurate and 59\% faster. The question remains whether this can be seen as a valid argument as EfficientNet-B0 uses far less parameters compared to Rep-VGG-A2. If one compares models with approximately equal number of parameters like ResNeXt-50 to RepVGG-A2 such accuracy guarantees will no longer outperform the state-of-the-art models (77.46 vs. 76.48). Nevertheless the speed-up factors remain the strong accomplishment of all RepVGG models (484 ResNeXt-50 vs. 1322 RepVGG-A2). The comparison of ResNeXt-50 and RepVGG-A2 is in addition a perfect proof of the thesis that speed cannot be approximated with FLOPs. If so ResNeXt-50 should have been faster in inference as having less theoretical FLOPs compared to RepVGG-A2 (4.2 vs. 5.1). Winograd multiplications on the other hand seem to work as a better metric to derive speed comparisons (4.1 ResNeXt-50 vs. 2.7 RepVGG-A2). 
+Also, it is worth noticing that RepVGG models can of course - at the cost of the number of parameters needed - keep up with state-of-the-art models. The authors therefore try to make a point by comparing e.g. EfficientNet-B0 to RepVGG-A2 being 1.37\% more accurate and 59\% faster. The question remains whether this can be seen as a valid argument as EfficientNet-B0 uses far fewer parameters compared to Rep-VGG-A2. If one compares models with an approximately equal number of parameters like ResNeXt-50 to RepVGG-A2 such accuracy guarantees will no longer outperform the state-of-the-art models (77.46 vs. 76.48). Nevertheless, the speed-up factors remain the strong accomplishment of all RepVGG models (484 ResNeXt-50 vs. 1322 RepVGG-A2). The comparison of ResNeXt-50 and RepVGG-A2 is in addition a perfect proof of the thesis of ShuffleNetv2 \cite{NingningMa.2018} that speed cannot be approximated with FLOPs (see explanation in \autoref{related_work} and further motivation for RepVGG in \autoref{introduction}). If so ResNeXt-50 should have been faster in inference as having fewer theoretical FLOPs compared to RepVGG-A2 (4.2 vs. 5.1). Winograd multiplications \cite{AndrewLavin.2015} on the other hand seem to work as a better metric to derive speed comparisons (4.1 ResNeXt-50 vs. 2.7 RepVGG-A2). Another example can be seen when comparing VGG-16 to ResNet-152, where VGG-16 outperforms ResNet-152 in speed in spite of having a bigger theoretical computational complexity (but lower Winograd MULTs in the end).
 
 \setlength{\tabcolsep}{3pt}
 \begin{table}
@@ -111,7 +111,7 @@ Also it is worth noticing that RepVGG models can of course - at the costs of the
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{Heavyweight RepVGG performances on ImageNet \cite{JiaDeng.2009} after being trained 200 epochs with Autoaugment, label smoothing and mixup \cite{XiaohanDing.2021}.}
+	\caption{Heavyweight RepVGG performances on ImageNet \cite{JiaDeng.2009} after being trained 200 epochs with AutoAugment \cite{EkinDCubuk.2019}, label smoothing \cite{ChristianSzegedy.2015} and mixup \cite{HongyiZhang.2018} \cite{XiaohanDing.2021}.}
 	\label{tab:results2}
 \end{table}
 \setlength{\tabcolsep}{6pt}
@@ -133,11 +133,11 @@ The fact that RepVGG as the first of its kind achieved an accuracy of over 80\% 
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{Ablation studies with 120 epochs on RepVGG-B0 \cite{XiaohanDing.2021}.}
+	\caption{Ablation studies on RepVGG-B0 \cite{XiaohanDing.2021}.}
 	\label{tab:ablation1}
 \end{table}
 
-In the ablation studies in \autoref{tab:ablation1} one recognizes the importance of the shortcut connections and ensemble character of RepVGG after 120 epochs of training as the performance decreases when removing the identity and/or 1x1 convolutional branches. At the same time the speed increases when switching from a multi-branch model to a single-branch model. Note that the speed is this time measured before the structural re-parameterization. 
+In the ablation studies in \autoref{tab:ablation1} one recognizes the importance of the shortcut connections and ensemble character of RepVGG as the performance decreases when removing the identity and/or 1x1 convolutional branches. At the same time, the speed increases when switching from a multi-branch model to a single-branch model. Note that the speed is this time measured before the structural re-parameterization. 
 
 \begin{table}
 	\begin{center}
@@ -161,8 +161,34 @@ In the ablation studies in \autoref{tab:ablation1} one recognizes the importance
 	\label{tab:ablation2}
 \end{table}
 
-The experiments shown in \autoref{tab:ablation2} are based on architectural changes of RepVGG-B0 after being trained for 120 epochs. With experiments using a DiracNet-like re-parameterization, a trivial re-parameterization (DiracNet re-parameterization with both scaling factors $a$ and $b$ set constant to 1) and another structural re-parameterization method with asymmetric convolutional blocks, interesting experiments and comparisons to other methods of re-parameterization are given. One can therefore conclude, that re-parameterization with parameters only simulating a ResNet-like architecture during training like DiracNet does is inferior to a real structural re-parameterization method like RepVGG uses. Also the success of RepVGG cannot be traced back to simple over-parameterization of each block during training when comparing the accuracy of an initial RepVGG-B0 model to a similar model with plugged-in ACB blocks replacing the RepVGG blocks. Both models therefore use over-parameterization during training and afterwards structural re-parameterization to build the inferecne model, still the RepVGG model yields in higher accuracy. RepVGG is specifically designed to make plain VGG-like CNNs trainable and achieves its higher accuracy compared to a ACB-enriched architecture through its ResNet-like training-time architecture. 
+The experiments shown in \autoref{tab:ablation2} are based on architectural changes of RepVGG-B0. With experiments using a DiracNet-like re-parameterization \cite{SergeyZagoruyko.2018}, a trivial re-parameterization (DiracNet re-parameterization with both scaling factors $a$ and $b$ set constant to 1) and another structural re-parameterization method with asymmetric convolutional blocks \cite{XiaohanDing.2019}, interesting experiments and comparisons to other methods of re-parameterization are given. One can therefore conclude, that re-parameterization with parameters only simulating a ResNet-like architecture during training like DiracNet \cite{SergeyZagoruyko.2018} does is inferior to a real structural re-parameterization method like RepVGG uses. Also, the success of RepVGG cannot be traced back to simple over-parameterization of each block during training when comparing the accuracy of an initial RepVGG-B0 model to a similar model with plugged-in ACB blocks replacing the RepVGG blocks. Both models therefore use over-parameterization during training and afterwards structural re-parameterization to build the inference model, still the RepVGG model yields higher accuracy. RepVGG is specifically designed to make plain VGG-like CNNs trainable and achieves its higher accuracy compared to an ACB-enriched architecture through its ResNet-like training-time architecture. 
 
-For the last comparison made in the experiments, a real residual network having one 3x3 convolutional layer in the first stage and two, three and eight residual blocks in stage two, three and four was provided (shortcut connections just like ResNet-18/34). While having the same amount of 3x3 convolutional layers RepVGG still managed to outperform such an architecture (75.14 vs. 74.56), which is not surprising looking back at the first experiments made and keeping in mind that RepVGG can be seen as an ensemble of far more models. 
+For the last comparison made in the experiments, a real residual network having one 3x3 convolutional layer in the first stage and two, three and eight residual blocks in stages two, three and four was provided (shortcut connections just like ResNet-18/34). While having the same amount of 3x3 convolutional layers RepVGG still managed to outperform such an architecture (75.14 vs. 74.56), which is not surprising looking back at the first experiments made and keeping in mind that RepVGG can be seen as an ensemble of far more models. 
 
 \subsection{Semantic Segmentation}
+
+\setlength{\tabcolsep}{3pt}
+\begin{table}
+	\begin{center}
+		\begin{tabular}{lccc} 
+			\hline
+			Backbone & Mean IoU & Mean pixel acc & Speed \\
+			\hline
+			\textbf{RepVGG-B1g2-fast} & 78.88 & 96.19 & 10.9 \\
+			ResNet-50 & 77.17 & 95.99 & 10.4 \\
+			\textbf{RepVGG-B1g2} & 78.70 & 96.27 & 8.0 \\
+			\hline
+			\textbf{RepVGG-B2-fast} & 79.52 & 96.36 & 6.9 \\
+			ResNet-101 & 78.51 & 96.30 & 6.7 \\
+			\textbf{RepVGG-B2} & 80.57 & 96.50 & 4.5 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{RepVGG performances on Cityscapes \cite{MariusCordts.2016} after being pretrained on ImageNet \cite{JiaDeng.2009} an trained for further 40 epochs \cite{XiaohanDing.2021}.}
+	\label{tab:results3}
+\end{table}
+\setlength{\tabcolsep}{6pt}
+
+Similar results are achieved in semantic segmentation on Cityscapes \cite{MariusCordts.2016}. Therefore the ResNet-50/101 backbone of the well-established pyramid scene parsing network (PSPNet \cite{HengshuangZhao.2017}) was changed to RepVGG-B1g2/B2. PSPNet won the ImageNet scene parsing challenge of 2016 and also scored best on Cityscapes \cite{MariusCordts.2016} during the time of its publication. Scene parsing is based on semantic segmentation and predicts a category label for each pixel. This becomes most important in the autonomous driving research area giving RepVGG also an influence on practical fields of application. 
+
+After training an ImageNet \cite{JiaDeng.2009} pretrained RepVGG-B1g2 backbone for further 40 epochs on 8 GPUs (batch size 16), one registers a small increase in mean intersection over union (IoU) of 0.37, but a 62\% faster inference-speed compared to ResNet-101 (see \autoref{tab:results3}) stressing the well-achieved speed-accuracy trade-off of RepVGG once again. Note that the original architecture of RepVGG-B1g2 got slightly adapted, the last 5 layers were changed to dilated convolutional layers \cite{FisherYu.2016} (making the configuration also the fast RepVGG-B1g2-fast variant, as actually the entire 2 last stages would need to be dilated for equal comparisons). 
