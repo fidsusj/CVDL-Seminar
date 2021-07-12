@@ -32,6 +32,7 @@ To receive the final 3x3 convolutional layer one simply has to add all 3 kernels
 
 \subsection{Resulting architecture}
 
+\setlength{\tabcolsep}{5pt}
 \begin{table}
 	\begin{center}
 		\begin{tabular}{c|c|l|l} 
@@ -49,6 +50,7 @@ To receive the final 3x3 convolutional layer one simply has to add all 3 kernels
 	\caption{General purpose RepVGG archetype \cite{XiaohanDing.2021}.}
 	\label{tab:architecture}
 \end{table}
+\setlength{\tabcolsep}{6pt}
 
 Inspired by VGG \cite{KarenSimonyan.2014} and ResNet \cite{KaimingHe.2015} the archetype of RepVGG networks results in the general-purpose template shown in \autoref{tab:architecture}. Every architecture is divided into five stages where each stage downsamples by using a stride of 2 in the first layer instead of using max-pooling layers as opposed to the original VGG model. This means more hardware-optimized 3x3 convolutional layers can potentially be integrated onto the chip. To speed up inference the first stage only uses a single layer to quickly downsample high-resolution images. Most of the convolutional work is done on a small 28x28 image size in stage four following ResNet \cite{KaimingHe.2015} and RegNet \cite{IlijaRadosavovic.2020} architectural designs. With these considerations RepVGG-A and RepVGG-B were specified, the former to perform against light- and middleweight models, the latter to perform against heavyweight models. Both can be further adapted by choosing the width scaling factors $a$ and $b$ accordingly. Note that $b$ is usually chosen higher than $a$ to receive richer features. Also maximally 64 filters should be learned in stage 1 to keep computational effort for convoluting with high-resolution images limited. The scaling factor $a$ reaches from 0.75 in RepVGG-A0 to 3 in RepVGG-B3 whereas scaling factor $b$ lies between 2.5 in RepVGG-A0 to 5 in RepVGG-B3. Note that the task-specific heads still need to be added in order to complete the architecture. Therefore global average pooling and a fully-connected layer will be appended for image classification which is not shown in \autoref{tab:architecture}. 
 
