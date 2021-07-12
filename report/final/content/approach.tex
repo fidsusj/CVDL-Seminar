@@ -3,46 +3,53 @@
 
 \subsection{Structural re-parameterization method}
 
-Though the goal of RepVGG is to provide a plain VGG-like CNN architecture, training such an architecture with reasonable depth until convergence is hard. The degradation problem leads to an increase of the training loss curve as deeper layers struggle to learn an implicit identity function once shallower layers have learned an ideal mapping \cite{KaimingHe.2015}. Also very deep plain CNNs make backpropagation difficult as gradients vanish when trying to reach shallower layers. Even if there have been studies to make such plain CNNs converge \cite{LechaoXiao.2018, OyebadeKOyedotun.2020}, speed-accuracy trade-off for plain CNNs remained an open research topic. To avoid the strugggles to train a plain CNN directly, RepVGG uses a structural re-parameterization method to transfer model parameters from a trained ResNet-like architecture to a plain VGG-like architecture that is used for inference. 
+Though the goal of RepVGG is to provide a plain VGG-like CNN architecture, training such an architecture with reasonable depth until convergence is hard. The degradation problem leads to an increase of the training loss curve as deeper layers struggle to learn an implicit identity function once shallower layers have learned an ideal mapping \cite{KaimingHe.2015}. Also, very deep plain CNNs make backpropagation difficult as gradients vanish when trying to reach shallower layers. Even if there had been studies to make such plain CNNs converge \cite{LechaoXiao.2018, OyebadeKOyedotun.2020}, speed-accuracy trade-off for plain CNNs remained an open research topic. To avoid the struggles to train a plain CNN directly, RepVGG uses a structural re-parameterization method to transfer model parameters from a trained ResNet-like architecture to a plain VGG-like architecture that is used for inference. 
 
 \begin{figure}[t]
 	\begin{center}
 		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
-		\includegraphics[width=0.8\linewidth]{images/re-parameterization.PNG}
+		\includegraphics[width=\linewidth]{images/re-parameterization.PNG}
 	\end{center}
-	\caption{Structural re-parameterization method of RepVGG transforming a 3x3 convolutional layer, a 1x1 convolutional layer and an identity branch to a single 3x3 convolutional layer.}
+	\caption{Structural re-parameterization method of RepVGG transforming a 3x3 convolutional layer, a 1x1 convolutional layer and an identity branch to a single 3x3 convolutional layer branch \cite{XiaohanDing.2021}.}
 	\label{fig:reparameterization}
 \end{figure}
 
 One layer in the training-time architecture contains three branches, a 3x3 convolution, a 1x1 convolution and an identity branch (see \autoref{fig:reparameterization}). Having the identity branch makes the architecture ResNet-like and prevents the degradation and vanishing gradient problem. The additional 1x1 convolution branch is needed for dimensionality control in case the dimensions would not match when adding the identity shortcut connection with the 3x3 convolution branch. In this case the identity branch is omitted. Having such three branches makes the training time model an implicit ensemble of $3^n$ models with $n$ being the number of layers used. 
 
-To transform this layer configuration to a single-path 3x3 convolution simple linear algebra is used. First the identity branch is transformed to a 1x1 convolution using the identity matrix as a kernel. The two 1x1 convolutional layers are then zero-padded to become 3x3 convolutional layers. Next the batch normalization layers need to be transformed. Batch normalization is applied channel-wise to every pixel in a feature map resulting from a convolutional operation of the input channel $M$ with the filter $W$ according to 
+To transform this layer configuration to a single-path 3x3 convolution simple linear algebra is used. First the identity branch is transformed to a 1x1 convolution using the identity matrix as a kernel. The two 1x1 convolutional layers are then zero-padded to become 3x3 convolutional layers. Next the batch normalization layers need to be transformed. Batch normalization is originally applied channel-wise to every pixel in a feature map resulting from a convolutional operation of the input channel $M$ with the filter $W$ according to 
 
 \begin{equation} \label{eq:batchnormalization}
 	bn(M*W, \mu, \sigma, \gamma, \beta) = (M*W - \mu)\frac{\gamma}{\sigma} + \beta
 \end{equation}
 
-with $\mu$ being the accumulated mean, $\sigma$ being the standard deviation, $\gamma$ being the learned scaling factor and $\beta$ being the bias value. One could also realise batch normalization by adapting the convolutional filter and adding a bias value after convolution like 
+with $\mu$ being the accumulated mean, $\sigma$ being the standard deviation, $\gamma$ being the learned scaling factor and $\beta$ being the bias value. One could also realize batch normalization by adapting the convolutional filter and adding a bias value after convolution like 
 
 \begin{equation} \label{eq:batchnormalizationtransformed}
 	bn(M*W, \mu, \sigma, \gamma, \beta) = M*(\frac{\gamma}{\sigma}W) - (\frac{\mu\gamma}{\sigma} + \beta).
 \end{equation}
 
-To receive the final 3x3 convolutional layer one simple has to add all three kernels together as well as all three bias values (see \autoref{fig:reparameterization}). Note that equal striding as well as compatible padding configurations over the 3x3 and 1x1 branch for the image dimension is necessary to perform such re-parameterization technique. 
+To receive the final 3x3 convolutional layer one simply has to add all 3 kernels together as well as all 3 bias values (see \autoref{fig:reparameterization}). Note that equal striding and compatible padding configuration over the 3x3 and 1x1 branch for the image dimension is necessary to perform such re-parameterization technique (padding one pixel less for 1x1 convolution). 
 
 \subsection{Resulting architecture}
 
-Inspired by VGG and ResNet the archetype of RepVGG networks results in the general purpose template shown in \autoref{fig:architecture}.
-
-\begin{figure}[t]
+\begin{table}
 	\begin{center}
-		% \fbox{\rule{0pt}{2in}\rule{0.9\linewidth}{0pt}}
-		\includegraphics[width=0.8\linewidth]{images/architecture.PNG}
+		\begin{tabular}{c|c|l|l} 
+			\hline
+			Stage & Output size & RepVGG-A & RepVGG-B \\
+			\hline
+			1 & 112 x 112 & 1 x min(64,64a) & 1 x min(64,64a) \\
+			2 & 56 x 56 & 2 x 64a & 4 x 64a \\
+			3 & 28 x 28 & 4 x 128a & 6 x 128a \\
+			4 & 14 x 14 & 14 x 256a & 16 x 256a \\
+			5 & 7 x 7 & 1 x 512b & 1 x 512b \\
+			\hline
+		\end{tabular}
 	\end{center}
-	\caption{General purpose RepVGG archetype}
-	\label{fig:architecture}
-\end{figure}
+	\caption{General purpose RepVGG archetype \cite{XiaohanDing.2021}.}
+	\label{tab:architecture}
+\end{table}
 
-Every architecture is divided into five stages where each stage downsamples by using a stride of two in the first layer instead of using max pooling layers as opposed to the original VGG model. This means more hardware optimized 3x3 convolutional layers can potentially be integrated onto the chip. To speed up inference the first stage only uses a single layer to quickly downsample high resolution images. Most of the convolutional work is done on a small 28x28 image size in stage four following ResNet and RegNet architectural designs. With these considerations RepVGG-A and RepVGG-B were specified, the former to perform against light- and middleweight models, the latter toperform agains heavyweight models. Both can be further adapted by choosing te width scaling factors $a$ and $b$ accordingly. Note that $b$ is usually chosen higher than $a$ to receive richer features. Also maximally 64 filters should be learned in stage one to keep computational effort for convoluting with high resolution images limited. The scaling factor $a$ reaches from 0.75 in RepVGG-A0 to 3 in RepVGG-B3 whereas scaling factor $b$ lies between 2.5 in RepVGG-A0 to 5 in RepVGG-B3.  
+Inspired by VGG \cite{KarenSimonyan.2014} and ResNet \cite{KaimingHe.2015} the archetype of RepVGG networks results in the general-purpose template shown in \autoref{tab:architecture}. Every architecture is divided into five stages where each stage downsamples by using a stride of 2 in the first layer instead of using max-pooling layers as opposed to the original VGG model. This means more hardware-optimized 3x3 convolutional layers can potentially be integrated onto the chip. To speed up inference the first stage only uses a single layer to quickly downsample high-resolution images. Most of the convolutional work is done on a small 28x28 image size in stage four following ResNet \cite{KaimingHe.2015} and RegNet \cite{IlijaRadosavovic.2020} architectural designs. With these considerations RepVGG-A and RepVGG-B were specified, the former to perform against light- and middleweight models, the latter to perform against heavyweight models. Both can be further adapted by choosing the width scaling factors $a$ and $b$ accordingly. Note that $b$ is usually chosen higher than $a$ to receive richer features. Also maximally 64 filters should be learned in stage 1 to keep computational effort for convoluting with high-resolution images limited. The scaling factor $a$ reaches from 0.75 in RepVGG-A0 to 3 in RepVGG-B3 whereas scaling factor $b$ lies between 2.5 in RepVGG-A0 to 5 in RepVGG-B3. Note that the task-specific heads still need to be added in order to complete the architecture. Therefore global average pooling and a fully-connected layer will be appended for image classification which is not shown in \autoref{tab:architecture}. 
 
-Futher offsprings of the general purpose RepVGG archetype use groupwise 3x3 convolution in order to make inference faster at the cost of lower accuracy. Normally such groupwise convolutional layers would implicitly increase MAC as more channels can be used within a certain FLOP constraint, but as the output channel configuration remains the same, the MAC also stays constant. Therefore instead of using dense convolution between all channels, convolution is applied groupwise in groups of two or four making convolution more sparse and therefore faster. In order to not lose inter-channel correlations throughout the network, groupwise convolution is only applied every second layer starting from layer three.  
+Futher offsprings of the general-purpose RepVGG archetype use groupwise 3x3 convolution in order to make inference faster at the cost of lower accuracy. Normally such groupwise convolutional layers would implicitly increase MAC as more channels can be used within a certain FLOP constraint, but as the output channel configuration remains the same, the MAC also stays constant. Therefore instead of using dense convolution between all channels, convolution is applied groupwise in groups of 2 or 4 making convolution more sparse and therefore faster. In order to not lose inter-channel correlations throughout the network, groupwise convolution is only applied to every second layer starting from layer 3.  
