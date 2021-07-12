@@ -2,7 +2,49 @@
 
 \subsection{Training configuration}
 
-Not that weight initialization was not onsidered anymore here. 
+\begin{table}
+	\begin{center}
+		\begin{tabular}{c|c|c|c} 
+			\hline
+			Name & Layers of each stage & a & b \\
+			\hline
+			RepVGG-A0 & 1, 2, 4, 14, 1 & 0.75 & 2.5 \\
+			RepVGG-A1 & 1, 2, 4, 14, 1 & 1 & 2.5 \\
+			RepVGG-A2 & 1, 2, 4, 14, 1 & 1.5 & 2.75 \\
+			\hline
+			RepVGG-B0 & 1, 4, 6, 16, 1 & 1 & 2.5 \\
+			RepVGG-B1 & 1, 4, 6, 16, 1 & 2 & 4 \\
+			RepVGG-B2 & 1, 4, 6, 16, 1 & 2.5 & 5 \\
+			RepVGG-B3 & 1, 4, 6, 16, 1 & 3 & 5 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{RepVGG models used for the experiments \cite{XiaohanDing.2021}.}
+	\label{tab:models}
+\end{table}
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{ll} 
+			\hline
+			Training configuration & \\
+			\hline
+			Epochs & 120 / 200 (heavyweight) \\
+			Batch size & 256 \\
+			GPUs & 8 \\
+			Initial learning rate & 0.1 \\
+			Learning rate schedule & Cosine annealing \\
+			Momentum & 0.9 \\
+			Optimization method & Stochastic gradient descent \\
+			Weight decay & $10^{-4}$ \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Training configuration and hyperparameters used for training the models \cite{XiaohanDing.2021}.}
+	\label{tab:hyperparameter}
+\end{table}
+
+Derived from the general purpose RepVGG archetype a set of different RepVGG models was provided (see \autoref{tab:models}) and trained (see \autoref{tab:models}) to be used in experiments. The lightweight models (RepVGG-A0 - RepVGG-A2) and middleweight models (RepVGG-B0 - RepVGG-B2) were only trained on a simple data augmentation setup \cite{PyTorch.2020} with random cropping and left-right flipping, whereas the heavyweight models additionally use Autoaugment \cite{EkinDCubuk.2019}, a method to search for suitable data augmentation policies proven to work well on ImageNet \cite{JiaDeng.2009}, and mixup \cite{HongyiZhang.2018}, that provides linear interpolated training samples of 2 parent samples. Also label smoothing \cite{ChristianSzegedy.2015} was incorporated as an additional regularization technique. Models with interleaved groupwise convolution are trained on both training setups. Note that through the structural re-parameterization strategy weight initialization was not explicitly considered anymore as now, while training a ResNet-like training-time architecture compared to training deep plain CNN models \cite{LechaoXiao.2018, OyebadeOyedotun.2020}, convergence is not too sensitive to the inital choice of weights anymore.
 
 \subsection{Comparison to baselines}
 
@@ -41,7 +83,7 @@ Not that weight initialization was not onsidered anymore here.
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{RepVGG performance on ImageNet \cite{JiaDeng.2009} after being trained 120 epochs with simple data augmentation. The speed is measured in examples/second. \cite{XiaohanDing.2021}}
+	\caption{Light- and middleweight RepVGG performances on ImageNet \cite{JiaDeng.2009} after being trained 120 epochs with simple data augmentation. The speed is measured in examples/second. Models using interleaved groupwise convolutional layers are postfixed with g2/g4. \cite{XiaohanDing.2021}}
 	\label{tab:results1}
 \end{table}
 \setlength{\tabcolsep}{6pt}
@@ -69,7 +111,7 @@ Also it is worth noticing that RepVGG models can of course - at the costs of the
 			\hline
 		\end{tabular}
 	\end{center}
-	\caption{RepVGG performance on ImageNet \cite{JiaDeng.2009} after being trained 200 epochs with Autoaugment, label smoothing and mixup \cite{XiaohanDing.2021}.}
+	\caption{Heavyweight RepVGG performances on ImageNet \cite{JiaDeng.2009} after being trained 200 epochs with Autoaugment, label smoothing and mixup \cite{XiaohanDing.2021}.}
 	\label{tab:results2}
 \end{table}
 \setlength{\tabcolsep}{6pt}
@@ -121,6 +163,6 @@ In the ablation studies in \autoref{tab:ablation1} one recognizes the importance
 
 The experiments shown in \autoref{tab:ablation2} are based on architectural changes of RepVGG-B0 after being trained for 120 epochs. With experiments using a DiracNet-like re-parameterization, a trivial re-parameterization (DiracNet re-parameterization with both scaling factors $a$ and $b$ set constant to 1) and another structural re-parameterization method with asymmetric convolutional blocks, interesting experiments and comparisons to other methods of re-parameterization are given. One can therefore conclude, that re-parameterization with parameters only simulating a ResNet-like architecture during training like DiracNet does is inferior to a real structural re-parameterization method like RepVGG uses. Also the success of RepVGG cannot be traced back to simple over-parameterization of each block during training when comparing the accuracy of an initial RepVGG-B0 model to a similar model with plugged-in ACB blocks replacing the RepVGG blocks. Both models therefore use over-parameterization during training and afterwards structural re-parameterization to build the inferecne model, still the RepVGG model yields in higher accuracy. RepVGG is specifically designed to make plain VGG-like CNNs trainable and achieves its higher accuracy compared to a ACB-enriched architecture through its ResNet-like training-time architecture. 
 
-For the last comparison made in the experiments, a real residual network having one 3x3 convolutional layer in the first stage and two, three and eight residual blocks in stage two, three and four was build (shortcut connections just like ResNet-18/34). While having the same amount of 3x3 convolutional layers RepVGG still managed to outperform such an architecture (75.14 vs. 74.56), which is not surprising looking back at the first experiments made and keeping in mind that RepVGG can be seen as an ensemble of far more models. 
+For the last comparison made in the experiments, a real residual network having one 3x3 convolutional layer in the first stage and two, three and eight residual blocks in stage two, three and four was provided (shortcut connections just like ResNet-18/34). While having the same amount of 3x3 convolutional layers RepVGG still managed to outperform such an architecture (75.14 vs. 74.56), which is not surprising looking back at the first experiments made and keeping in mind that RepVGG can be seen as an ensemble of far more models. 
 
 \subsection{Semantic Segmentation}
