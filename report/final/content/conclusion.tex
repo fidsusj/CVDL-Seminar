@@ -1,10 +1,10 @@
-\section{Conclusion}
+\section{Conclusion} \label{conclusion}
 
 Back to the question of \textit{RepVGG: Making VGG-style ConvNets great again?} one concludes that RepVGG convinces by providing a simple to implement VGG-style model with a well-achieved speed-accuracy trade-off by utilizing a structural re-parameterization method. It therefore clearly differenciates in its approach and goal-setting from other approaches like DiracNet, ABCs or special initialization methods. 
 
 RepVGG also gives a novel point of view into the design, training and deployment of CNNs with its re-parameterization method as a bridge to enable a separation into a training- and an inference-time architecture. Also considering the concrete deployment infrastructure and adapting the design of the model accordingly (3x3 convolutional layers to be optimized with the Winograd convolutional algorithm) is not to be neglected as a scientific contribution. 
 
-What remains is a plain VGG-like CNN model with noticable speed gains and the first of its kind achieving an over 80\% acuracy mark on ImageNet as a plain CNN model. Therefore RepVGG makes very important contribution into this specific field of research. The thesis to make VGG-style ConvNets great again fits to the results achieved in the original paper. 
+What remains is a plain VGG-like CNN model with noticable speed gains and the first of its kind achieving an over 80\% acuracy mark on ImageNet \cite{JiaDeng.2009} as a plain CNN model. Therefore RepVGG makes very important contribution into this specific field of research. The thesis to make VGG-style ConvNets great again fits to the results achieved in the original paper. 
 
 
 %TODO Eveything contained from paper and presentation
@@ -14,7 +14,7 @@ What remains is a plain VGG-like CNN model with noticable speed gains and the fi
 %TODO Scale images
 %TODO Appreviations introduced?
 %TODO Plagiarism anywhere?
+%TODO: Tense
 
-// ResNext in related work
-// FLOPS dont represent speed in introdution or approach? also see presentation Drawbacks-Speed
+// FLOPS dont represent speed in introdution or approach (see Winograd and introduction)? also see presentation Drawbacks-Speed
 // See introduction for transformation of 1x1 to 3x3 and presentation in Idea:RepVGG

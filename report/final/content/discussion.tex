@@ -1,10 +1,10 @@
-\section{Discussion}
+\section{Discussion} \label{discussion}
 
 \subsection{Highlights}
 
 RepVGG aims to deliver an approach to implicitly train a simple plain VGG-like architecture by using a ResNet-like training-time architecture and transforming its weight parameters to the actual VGG-like architecture used for inference by utilizing a nocal structural re-parameterization method. Thus making such a transformation possible, RepVGG achieves an unquestionable boost in speed compared to modern state-of-the-art architectures while at the same time not falling too far apart in its achieved accuracy. The speed-accuracy trade-off was therefore well achieved. 
 
-Also pointing out other dimensions to take into consideration while designing CNN archiectures like supported hardware optimization (Winograd concolution) or MACs, which make the often used FLOP measure as a direct measure of speed redundant, also add value to this scientific outcome by experimental proof.
+Also pointing out other dimensions to take into consideration while designing CNN archiectures like supported hardware optimization (Winograd convolution) or MACs, which make the often used FLOP measure as a direct measure of speed redundant, also add value to this scientific outcome by experimental proof.
 
 Applying RepVGG to semantic segmentation on Cityscapes also demonstrates its value for industrial usage. Especially in real-time environments like autonomous driving having an optimal speed-accuracy trade-off is essential for the adoption of such networks. 
 
